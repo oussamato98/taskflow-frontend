@@ -9,18 +9,22 @@ export const Context = createContext();
 
 function App() {
 
-     const [isAuthenticated, setIsAuthenticated] = useState(false);
+     //const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     return (
-        <Context.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+       // <Context.Provider value={{ isAuthenticated, setIsAuthenticated }}>
             <BrowserRouter>
                 <Routes>
                     <Route path="/login" element={<Login />} />
+                    <Route path="/projects" element={<Project />} />
+
+                    {/*
                     <Route path="/projects/*" element={<PrivateRoute element={<Project />} authenticated={isAuthenticated} />} />
+*/}
 
                 </Routes>
             </BrowserRouter>
-        </Context.Provider>
+       // </Context.Provider>
 
   );
 }

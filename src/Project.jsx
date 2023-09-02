@@ -1,21 +1,29 @@
 import React, {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import Cookies from 'js-cookie';
+import axios from "axios";
+import {API_URL} from "./config";
 
 
 function Project(){
     const navigate = useNavigate();
 
+    axios.defaults.withCredentials=true ;
+
     useEffect(() => {
-        // // Vérifier la présence et la validité du cookie ici
-        // const userCookie = Cookies.get('authCookie'); // Remplacez par le nom de votre cookie
-        // if (!userCookie) {
-        //     // Rediriger vers la page de connexion si le cookie n'est pas présent
-        //     //navigate('/login');
-        //     console.log("cookie non cree"+userCookie)
-        // }
-        const authCookieValue = Cookies.get('authCookie');
-        console.log(authCookieValue);
+
+        axios.get(`${API_URL}/`)
+            .then(res=>{
+                if(res.data.valid){
+                    console.log("is Logged ")
+                }
+                else{
+                    navigate('/login');
+                }
+            })
+            .catch()
+
+
 
     }, []);
     return(

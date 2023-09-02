@@ -1,4 +1,6 @@
 import React, {useState, useReducer, useContext} from 'react';
+
+import Cookies from "js-cookie";
 import axios from 'axios';
 import {API_URL} from "./config";
 import {
@@ -15,16 +17,15 @@ import {
 }
 from 'mdb-react-ui-kit';
 import {useNavigate} from "react-router-dom";
-import App, {Context} from "./App";
-import Cookies from "js-cookie";
+import {useCookies} from "react-cookie";
 
 
 
 
 function Login() {
+    const [cookies] = useCookies();
 
     const navigate = useNavigate();
-    const context = useContext(Context);
 
     const initialState = {
         name: '',
@@ -50,7 +51,7 @@ function Login() {
         }}
 
         const [state, dispatch] = useReducer(reducer, initialState);
-        const [isAuthenticated, setIsAuthenticated] = useState(false);
+       // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
         const [justifyActive, setJustifyActive] = useState('tab1');
 
@@ -60,58 +61,59 @@ function Login() {
             if (value === justifyActive) {
                 return;
             }
-
             setJustifyActive(value);
         };
 
-        const handleNameChange = (event) => {
+        const handleNameChangeRegister = (event) => {
             dispatch({type: 'SET_NAME', payload: event.target.value});
-        };
-
-        const handleUsernameChange = (event) => {
+        }
+        const handleUsernameChangeRegister = (event) => {
             dispatch({type: 'SET_USERNAME', payload: event.target.value});
-        };
+        }
 
-        const handleEmailChange = (event) => {
+        const handleEmailChangeRegister = (event) => {
             dispatch({type: 'SET_EMAIL', payload: event.target.value});
-        };
+        }
 
-        const handlePasswordChange = (event) => {
+
+        const handlePasswordChangeRegister = (event) => {
             dispatch({type: 'SET_PASSWORD', payload: event.target.value});
         };
 
-    const handleSubmit = async (event) => {
+    const handleSubmitRegister = async (event) => {
         event.preventDefault();
-
         try {
-            // Faites une requête POST à votre backend avec les données du formulaire
             const response = await axios.post(`${API_URL}/signup`, state);
-            // if(response.data.success){
-
-                //localStorage.setItem('token', response.data.token);
-                // setIsAuthenticated(true);
-                // context.setIsAuthenticated(true);
-            // setTimeout(() => {
-            //     const authCookieValue = Cookies.get('monCookie');
-            //     console.log("voici le cookie " + authCookieValue);
-            // }, 1000);
-                const authCookieValue = Cookies.get('monCookie');
-                console.log("voici le cooki "+authCookieValue);
-                //navigate('/projects');
-                // console.log("Ras" + response.data)
-
-            // }
-            // else{
-            //     console.log("rien recu")
-            // }
-
-        } catch (error) {
-            console.log("Erreur Backend" +error);
+           if (response.data.success){
+               //
+               handleJustifyClick('tab1') ;
+           }
+            else{
+                console.log("Error d authentification ")
+           }
         }
+        catch (error) {
+            console.log("Erreur Backend" +error);
+        } }
 
-        };
+    const handleEmailChangeLogin = (event) => {
+        dispatch({type: 'SET_EMAIL', payload: event.target.value});
+    }
 
-        return (
+
+    const handlePasswordChangeLogin = (event) => {
+        dispatch({type: 'SET_PASSWORD', payload: event.target.value});
+    };
+
+    const handleSubmitLogin = async (event) => {
+        event.preventDefault();
+        const response = await axios.post(`${API_URL}/login`, state);
+
+
+    }
+
+
+    return (
             <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
 
                 <MDBTabs pills justify className='mb-3 d-flex flex-row justify-content-between'>
@@ -154,16 +156,33 @@ function Login() {
 
                             <p className="text-center mt-3">or:</p>
                         </div>
+                        <form onSubmit={handleSubmitLogin}>
+                            <MDBInput
+                                value={state.email}
+                                onChange={handleEmailChangeLogin}
+                                wrapperClass='mb-4'
+                                label='Email address'
+                                id='form1'
+                                type='email'
+                            />
+                            <MDBInput
+                                value={state.password}
+                                onChange={handlePasswordChangeLogin}
+                                wrapperClass='mb-4'
+                                label='Password'
+                                id='form2'
+                                type='password'/>
 
-                        <MDBInput wrapperClass='mb-4' label='Email address' id='form1' type='email'/>
-                        <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password'/>
+                            <MDBBtn className="mb-4 w-100">Sign in</MDBBtn>
 
-                        <div className="d-flex justify-content-between mx-4 mb-4">
-                            <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me'/>
-                            <a href="!#">Forgot password?</a>
-                        </div>
+                        </form>
 
-                        <MDBBtn className="mb-4 w-100">Sign in</MDBBtn>
+
+                        {/*<div className="d-flex justify-content-between mx-4 mb-4">*/}
+                        {/*    <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me'/>*/}
+                        {/*    <a href="!#">Forgot password?</a>*/}
+                        {/*</div>*/}
+
                         <hr className="my-4"/>
 
                         <MDBBtn className="mb-2 w-100" size="lg" style={{backgroundColor: '#dd4b39'}}>
@@ -202,24 +221,24 @@ function Login() {
 
                             <p className="text-center mt-3">or:</p>
                         </div>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmitRegister}>
                             <MDBInput
                                 value={state.name}
-                                onChange={handleNameChange}
+                                onChange={handleNameChangeRegister}
                                 wrapperClass='mb-4' label='Name' id='form1' type='text'/>
 
                             <MDBInput
                                 value={state.username}
-                                onChange={handleUsernameChange}
+                                onChange={handleUsernameChangeRegister}
 
                                 wrapperClass='mb-4' label='Username' id='form1' type='text'/>
                             <MDBInput
                                 value={state.email}
-                                onChange={handleEmailChange}
+                                onChange={handleEmailChangeRegister}
                                 wrapperClass='mb-4' label='Email' id='form1' type='email'/>
                             <MDBInput
                                 value={state.password}
-                                onChange={handlePasswordChange}
+                                onChange={handlePasswordChangeRegister}
                                 wrapperClass='mb-4' label='Password' id='form1' type='password'/>
 
                             <div className='d-flex justify-content-center mb-4'>

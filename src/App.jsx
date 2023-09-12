@@ -1,30 +1,45 @@
-import React, {createContext, useState} from "react";
+import React, { useContext} from "react";
 import Login  from "./Login";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Project from "./Project";
-import PrivateRoute from "./PrivateRoute";
+import Navbar from "./Navbar";
+import Home from "./Home";
+import  {MyContext} from "./Context";
 
 
-export const Context = createContext();
 
 function App() {
 
-     //const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+    const ctx = useContext(MyContext);
     return (
-       // <Context.Provider value={{ isAuthenticated, setIsAuthenticated }}>
             <BrowserRouter>
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/projects" element={<Project />} />
 
-                    {/*
-                    <Route path="/projects/*" element={<PrivateRoute element={<Project />} authenticated={isAuthenticated} />} />
-*/}
+                    <Navbar />
+                    <Routes>
 
-                </Routes>
+                        <Route path="/" exact element={<Home />} />
+
+                        {ctx ? (
+
+                                <Route path="/projects" element={<Project />} />
+
+
+                            )
+                            :
+                            (
+
+                                <Route path="/login" element={<Login />} />
+
+                            )
+                        }
+
+
+
+
+                    </Routes>
+
+
             </BrowserRouter>
-       // </Context.Provider>
 
   );
 }

@@ -1,6 +1,6 @@
-import React, {useState, useReducer, useContext} from 'react';
+import React, {useState, useReducer} from 'react';
 
-import Cookies from "js-cookie";
+
 import axios from 'axios';
 import {API_URL} from "./config";
 import {
@@ -16,16 +16,11 @@ import {
     MDBCheckbox
 }
 from 'mdb-react-ui-kit';
-import {useNavigate} from "react-router-dom";
-import {useCookies} from "react-cookie";
 
 
 
 
 function Login() {
-    const [cookies] = useCookies();
-
-    const navigate = useNavigate();
 
     const initialState = {
         name: '',
@@ -51,7 +46,6 @@ function Login() {
         }}
 
         const [state, dispatch] = useReducer(reducer, initialState);
-       // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
         const [justifyActive, setJustifyActive] = useState('tab1');
 
@@ -105,11 +99,16 @@ function Login() {
         dispatch({type: 'SET_PASSWORD', payload: event.target.value});
     };
 
-    const handleSubmitLogin = async (event) => {
+
+// withCredential c est  pour indiquer à Axios d'inclure les cookies d'authentification dans la requête.
+    const handleSubmitLogin = (event)=>{
         event.preventDefault();
-        const response = await axios.post(`${API_URL}/login`, state);
-
-
+         axios.post(`${API_URL}/login`, state , {withCredentials:true})
+             .then(res=>{
+                 if(res.data==="Success"){
+                     window.location.href = '/'
+                 }
+             });
     }
 
 
@@ -173,15 +172,12 @@ function Login() {
                                 id='form2'
                                 type='password'/>
 
-                            <MDBBtn className="mb-4 w-100">Sign in</MDBBtn>
+                            <MDBBtn className="mb-4 w-100" type="submit" >Sign in</MDBBtn>
 
                         </form>
 
 
-                        {/*<div className="d-flex justify-content-between mx-4 mb-4">*/}
-                        {/*    <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me'/>*/}
-                        {/*    <a href="!#">Forgot password?</a>*/}
-                        {/*</div>*/}
+
 
                         <hr className="my-4"/>
 

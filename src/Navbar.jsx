@@ -17,36 +17,51 @@ function Navbar(){
     }
     return (
 
-            <nav className="navbar navbar-expand-sm bg-light">
-            {ctx ?
-                (
-                <ul className="navbar-nav">
-                    <li className="nav-item">
-                        <Link to={'/'}>Home</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link onClick={logout} to={'/logout'}>Logout</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to={'/projects'}>My Project</Link>
-                    </li>
-                </ul>
-                )
+        <div>
+            <nav className="navbar navbar-expand-lg bg-body-tertiary">
+                <div className="container-fluid">
+                    <a className="navbar-brand" href="/">
+                        <img
+                            src="https://thumbs.dreamstime.com/b/workflow-icon-white-background-flat-style-gear-arrow-ic-workflow-icon-white-background-flat-style-gear-arrow-icon-130737945.jpg"
+                            alt="Logo"
+                            width="35" height="40"
+                            className="d-inline-block align-text-top"/>
+                        WorkFlow
+                    </a>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav">
+                            <li className="nav-item">
+                                <a className="nav-link active" aria-current="page" href="/">Home</a>
+                            </li>
+                            {ctx ? (<>
+                                        <li className="nav-item right-logout">
+                                            <a className="nav-link "
+                                               href="/logout"
+                                               onClick={logout}
+                                            >
+                                                <i className="bi bi-box-arrow-right"></i>
+                                            </a>
+                                        </li>
+                                        <li className="nav-item right-notification">
+                                            <a className="nav-link " href="#">
+                                                <i className="bi bi-bell"></i>
+                                            </a>
+                                        </li>
+                                    </>
+                                )
+                                :
+                                (
+                                    <li className="nav-item ">
+                                        <a className="nav-link " href="/login">Login</a>
+                                    </li>
+                                )}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
 
-            :
-                (
-                <ul className="navbar-nav">
-                    <li className="nav-item">
-                        <Link to={'/login'}>Login</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to={'/register'}>Register</Link>
-                    </li>
-                </ul>
-                )
-            }
-
-            </nav> )
+    )
 
 
 

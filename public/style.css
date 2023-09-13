@@ -1,3 +1,15 @@
 .nav-item {
     margin-right: 50px; /* Ajustez la valeur de la marge selon vos préférences */
 }
+.navbar{
+    position: relative;
+}
+
+.right-notification {
+    position: absolute;
+    right: 150px;
+}
+.right-logout{
+    position: absolute;
+    right: 50px;
+}

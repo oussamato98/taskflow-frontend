@@ -3,6 +3,8 @@ import {Link} from "react-router-dom";
 import {MyContext} from "./Context";
 import axios from "axios";
 import {API_URL} from "./config";
+import Notification from "./Notification";
+import {MDBIcon} from "mdb-react-ui-kit";
 
 
 function Navbar(){
@@ -34,17 +36,20 @@ function Navbar(){
                                 <a className="nav-link active" aria-current="page" href="/">Home</a>
                             </li>
                             {ctx ? (<>
+                                        <li className="nav-item">
+                                            <a className="nav-link active" aria-current="page" href="/projects">Espace de Travail</a>
+                                        </li>
                                         <li className="nav-item right-logout">
                                             <a className="nav-link "
                                                href="/logout"
                                                onClick={logout}
                                             >
-                                                <i className="bi bi-box-arrow-right"></i>
+                                                <MDBIcon fas icon="sign-out-alt" />
                                             </a>
                                         </li>
                                         <li className="nav-item right-notification">
                                             <a className="nav-link " href="#">
-                                                <i className="bi bi-bell"></i>
+                                                <Notification />
                                             </a>
                                         </li>
                                     </>
@@ -52,6 +57,7 @@ function Navbar(){
                                 :
                                 (
                                     <li className="nav-item ">
+
                                         <a className="nav-link " href="/login">Login</a>
                                     </li>
                                 )}

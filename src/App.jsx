@@ -5,6 +5,7 @@ import Project from "./Project";
 import Navbar from "./Navbar";
 import Home from "./Home";
 import  {MyContext} from "./Context";
+import Sidebar from "./Sidebar";
 
 
 
@@ -14,7 +15,9 @@ function App() {
     return (
             <BrowserRouter>
 
-                    <Navbar />
+                        <Navbar />
+
+
                     <Routes>
 
                         <Route path="/" exact element={<Home />} />

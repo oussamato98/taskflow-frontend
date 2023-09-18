@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useReducer, useState} from 'react';
 import {
     MDBTabs,
     MDBTabsItem,
@@ -6,28 +6,90 @@ import {
     MDBTabsContent,
     MDBTabsPane,
     MDBRow,
-    MDBCol, MDBBtn
+    MDBCol, MDBBtn, MDBInput
 } from 'mdb-react-ui-kit';
 import Sidebar from "./Sidebar";
 import ProjectBar from "./ProjectBar";
 import axios from "axios";
 import {API_URL} from "./config";
 import Modal from "react-modal";
+import {MyContext} from "./Context";
 
 
 function Project() {
 
     const [projects, setProjects] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const user = useContext(MyContext);
+    console.log(user)
 
+
+
+    const initialState = {
+        nom:'',
+        evolution: '',
+        eta: '',
+        dateDebut: '' ,
+        dateFin : '' ,
+        chef: '',
+        loading: false,
+        error: null,
+        }
+
+    function reducer(state, action) {
+        switch (action.type) {
+            case 'SET_NOM':
+                return {...state, nom: action.payload};
+            case 'SET_EVOLUTION':
+                return {...state, evolution: action.payload};
+            case 'SET_ETA':
+                return {...state, eta: action.payload};
+            // case 'SET_DD':
+            //     return {...state, dateDebut: action.payload};
+            // case 'SET_DF':
+            //     return {...state, dateFin: action.payload};
+             case 'SET_CHEF':
+                 return {...state, chef: action.payload};
+            default:
+                return state;
+        }}
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    const handleNomChange = (event) => {
+        dispatch({type: 'SET_NOM', payload: event.target.value});
+    }
+    const handleEvolutionChange = (event) => {
+        dispatch({type: 'SET_EVOLUTION', payload: event.target.value});
+    }
+    const handleEtaChange = (event) => {
+        dispatch({type: 'SET_ETA', payload: event.target.value});
+    }
+    // const handleChefChange = (event) => {
+    //     dispatch({type: 'SET_CHEF', payload: event.target.value});
+    // }
+    // const handleDDChange = (event) => {
+    //     dispatch({type: 'SET_DD', payload: event.target.value});
+    // }
+    // const handleDFChange = (event) => {
+    //     dispatch({type: 'SET_DF', payload: event.target.value});
+    // }
     function toggleModel(){
         setModalIsOpen(!modalIsOpen)
     }
 
 
-    // function addProject(){
-    //
-    // }
+    const handleSubmitFormProject = (event)=>{
+        event.preventDefault();
+        axios.post(`${API_URL}/projects`, state , {withCredentials:true})
+            .then(
+                //res=>{
+                //if(res.status===201){
+                    console.log("ajoute avec succes")
+                //}
+            //}
+            );
+    }
+
     function deleteProject(id) {
 
         const projectToDelete = projects[id]; // Get the project to be deleted
@@ -112,11 +174,50 @@ function Project() {
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
                         width: '400px', // Adjust the width as needed
-                        padding: '20px',
+                        height: '80%',
+                        padding: '10px',
                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                     },
                     }}>
-                            <p>Hello</p>
+                            <div>
+                                <form
+                                    onSubmit={handleSubmitFormProject}
+                                    >
+                                    <MDBInput
+                                        value={state.nom}
+                                        onChange={handleNomChange}
+                                        wrapperClass='mb-4'
+                                        label='Titre'
+                                        id='form1'
+                                        type='text'
+                                    />
+                                    <MDBInput
+                                        value={state.evolution}
+                                        onChange={handleEvolutionChange}
+                                        wrapperClass='mb-4'
+                                        label='Evolution'
+                                        id='form2'
+                                        type='text'/>
+                                    <MDBInput
+                                        value={state.eta}
+                                        onChange={handleEtaChange}
+                                        wrapperClass='mb-4'
+                                        label='Etat'
+                                        id='form3'
+                                        type='text'/>
+                                    {/*<MDBInput*/}
+                                    {/*    //value={state.password}*/}
+                                    {/*    // onChange={}*/}
+                                    {/*    wrapperClass='mb-4'*/}
+                                    {/*    label='Chef'*/}
+                                    {/*    id='form4'*/}
+                                    {/*    type='text'/>*/}
+
+                                    <MDBBtn className="mb-4 w-100" type="submit" >Save</MDBBtn>
+
+                                </form>
+
+                            </div>
                             <button onClick={toggleModel}>Close</button>
                         </Modal>
 

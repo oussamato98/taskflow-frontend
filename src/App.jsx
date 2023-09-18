@@ -6,6 +6,7 @@ import Navbar from "./Navbar";
 import Home from "./Home";
 import  {MyContext} from "./Context";
 import Sidebar from "./Sidebar";
+import TacheDeProjet from "./TacheDeProjet";
 
 
 
@@ -23,8 +24,12 @@ function App() {
                         <Route path="/" exact element={<Home />} />
 
                         {ctx ? (
+                                <>
+                                    <Route path="/projects" element={<Project />} />
+                                    <Route path="/projects/:projectId" element={<TacheDeProjet />} />
+                                </>
 
-                                <Route path="/projects" element={<Project />} />
+
 
 
                             )

@@ -4,7 +4,7 @@ import {MyContext} from "./Context";
 
 function Home(){
     const ctx = useContext(MyContext);
-    console.log(ctx)
+    //console.log(ctx)
     return(
         <div>
             <div id="carouselBasicExample" class="carousel slide carousel-fade" data-mdb-ride="carousel">

@@ -9,7 +9,11 @@ function ProjectBar(props){
                 <td>
                     <div className="d-flex align-items-center">
                         <div className="ms-3">
-                            <p className="fw-bold mb-1">{props.nom}</p>
+
+                            <a href={"/projects/" + props._id}>
+                                <p className="fw-bold mb-1">{props.nom}</p>
+                            </a>
+
                         </div>
                     </div>
                 </td>

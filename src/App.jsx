@@ -5,8 +5,8 @@ import Project from "./Project";
 import Navbar from "./Navbar";
 import Home from "./Home";
 import  {MyContext} from "./Context";
-import Sidebar from "./Sidebar";
-import TacheDeProjet from "./TacheDeProjet";
+
+import TaskOfProject from "./TaskOfProject";
 
 
 
@@ -16,8 +16,7 @@ function App() {
     return (
             <BrowserRouter>
 
-                        <Navbar />
-
+                    <Navbar />
 
                     <Routes>
 
@@ -26,18 +25,12 @@ function App() {
                         {ctx ? (
                                 <>
                                     <Route path="/projects" element={<Project />} />
-                                    <Route path="/projects/:projectId" element={<TacheDeProjet />} />
+                                    <Route path="/projects/:projectId" element={< TaskOfProject/>} />
                                 </>
-
-
-
-
                             )
                             :
                             (
-
                                 <Route path="/login" element={<Login />} />
-
                             )
                         }
 

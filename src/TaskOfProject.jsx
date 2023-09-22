@@ -232,7 +232,7 @@ function TaskOfProject() {
 
 
     return (
-
+<DragDropContext>
         <div>
             <h2>Tâches du Projet {projectId}</h2>
 
@@ -436,6 +436,7 @@ function TaskOfProject() {
 
 
         </div>
+</DragDropContext>
     );
 }
 

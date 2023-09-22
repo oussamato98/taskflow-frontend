@@ -5,6 +5,7 @@ import {API_URL} from "./config";
 import TaskList from "./TaskList";
 import {MDBBtn, MDBInput} from "mdb-react-ui-kit";
 import Modal from "react-modal";
+import {DragDropContext} from "react-beautiful-dnd";
 
 function TaskOfProject() {
 
@@ -35,11 +36,14 @@ function TaskOfProject() {
         axios.get(`${API_URL}/projects/${projectId}`, { withCredentials: true })
             .then((res) => {
                 const taskIds = res.data[0].tache;
+                console.log("voici les ids des taches de ce projet ")
+
                 console.log(res.data[0].tache)
                 const promises = taskIds.map((taskId) => getTask(taskId));
                 Promise.all(promises)
                     .then((tasks) => {
                         setTasks(tasks);
+                        console.log("voici les taches de ce projet ")
                         console.log(tasks)
                     })
                     .catch((error) => {
@@ -51,27 +55,23 @@ function TaskOfProject() {
             });
     }, [projectId]);
 
-    function deleteTask(id) {
-        const taskToDelete = tasks[id]; // Obtenez la tâche à supprimer
-        const taskId = taskToDelete._id;
-        if(taskToDelete._id){
+    function deleteTask(taskId) {
             axios
                 .delete(`${API_URL}/taches/${taskId}`, {
                     withCredentials: true,
                 })
                 .then((res) => {
                     if (res.status === 204) {
-
+                        console.log("voici la tache a supprimer du projet : "+taskId)
                         axios
-                            .patch(`${API_URL}/projects/${projectId}`, taskId, {
+                            .patch(`${API_URL}/projects/${projectId}`, { tache: taskId }, {
                                 withCredentials: true,
                             })
                             .then((res) => {
                                 if (res.status === 200) {
-                                    // Le projet a été mis à jour avec succès pour supprimer la tâche
                                     setTasks((prevItems) => {
-                                        return prevItems.filter((item, index) => {
-                                            return index !== id;
+                                        return prevItems.filter((task) => {
+                                            return task._id !== taskId;
                                         });
                                     });
                                 }
@@ -84,7 +84,7 @@ function TaskOfProject() {
                 .catch((error) => {
                     console.error("Error deleting task:", error);
                 });
-        }
+
 
     }
 
@@ -180,6 +180,7 @@ function TaskOfProject() {
         axios.get(`${API_URL}/users/${selectedUser}`, { withCredentials: true })
             .then((userResponse) => {
                 const user = userResponse.data;
+                console.log("voici l utilisateur selectionne")
                 console.log(user)
 
                 // Attribuez l'objet utilisateur à state.executeur
@@ -224,13 +225,14 @@ function TaskOfProject() {
                     });
             })
             .catch((error) => {
-                console.error('Erreur lors de la récupération de l\'utilisateur par ID :', error);
+                console.error('Erreur lors de la récupération de lutilisateur par ID :', error);
             });
     };
 
 
 
     return (
+
         <div>
             <h2>Tâches du Projet {projectId}</h2>
 
@@ -242,12 +244,12 @@ function TaskOfProject() {
 
                         {tasks
                             .filter((task) => task && task.etat === "todo")
-                            .map((task, index) => (
+                            .map((task) => (
                                 <TaskList
-                                    key={index}
-                                    id={index}
+                                    // key={index}
+                                    // id={index}
                                     titre={task.titre}
-                                    _id={task._id}
+                                    id={task._id}
                                     evolution={task.evolution}
                                     delete={deleteTask}
                                 />
@@ -382,12 +384,12 @@ function TaskOfProject() {
                         <ul>
                             {tasks
                                 .filter((task) => task && task.etat === "doing")
-                                .map((task, index) => (
+                                .map((task) => (
                                     <TaskList
-                                        key={index}
-                                        id={index}
+                                        // key={index}
+                                        // id={index}
                                         titre={task.titre}
-                                        _id={task._id}
+                                        id={task._id}
                                         evolution={task.evolution}
                                         delete={deleteTask}
                                     />
@@ -399,12 +401,12 @@ function TaskOfProject() {
                         <p>To Validate</p>
                         {tasks
                             .filter((task) => task && task.etat === "tovalidate")
-                            .map((task, index) => (
+                            .map((task) => (
                                 <TaskList
-                                    key={index}
-                                    id={index}
+                                    // key={index}
+                                    // id={index}
                                     titre={task.titre}
-                                    _id={task._id}
+                                    id={task._id}
                                     evolution={task.evolution}
                                     delete={deleteTask}
                                 />
@@ -415,12 +417,12 @@ function TaskOfProject() {
                         <p>Done</p>
                         {tasks
                             .filter((task) => task && task.etat === "done")
-                            .map((task, index) => (
+                            .map((task) => (
                                 <TaskList
-                                    key={index}
-                                    id={index}
+                                    // key={index}
+                                    // id={index}
                                     titre={task.titre}
-                                    _id={task._id}
+                                    id={task._id}
                                     evolution={task.evolution}
                                     delete={deleteTask}
                                 />

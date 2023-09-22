@@ -2,11 +2,12 @@ import React from "react";
 
 function TaskList(props){
     return(
-        <div>
+        <div className="border-task-list">
             <div className="container">
                 <ul>
                     <li>{props.titre}</li>
-                    <li>{props.id}</li>
+                    {/*<li>{props.id}</li>*/}
+
                     <button type="button"
                             onClick={(event) => {
                                 props.delete(props.id);

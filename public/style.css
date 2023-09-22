@@ -13,9 +13,6 @@
     position: absolute;
     right: 50px;
 }
-.do{
-    background: black;
-    display: inline-block;
-    width: 100px;
-    height: 100px;
+.border-task-list{
+    border: 1px solid lightgray;
 }

@@ -101,14 +101,20 @@ function Project() {
             });
     }
 
+
     useEffect(() => {
-        axios
-            .get(`${API_URL}/projects`, { withCredentials: true })
-            .then((res) => {
-                setProjects(res.data);
-                //console.log(res.data)
-            });
-    }, []);
+        // Vérifiez si vous avez un utilisateur authentifié
+        if (user) {
+            // Effectuez une requête vers le backend en incluant l'identifiant de l'utilisateur
+            axios.get(`${API_URL}/projects?userId=${user._id}`, { withCredentials: true })
+                .then((response) => {
+                    setProjects(response.data);
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de la récupération des projets :", error);
+                });
+        }
+    }, [user]);
 
     return (
         <>

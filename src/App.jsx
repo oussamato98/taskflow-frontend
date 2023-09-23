@@ -7,6 +7,7 @@ import Home from "./Home";
 import  {MyContext} from "./Context";
 
 import TaskOfProject from "./TaskOfProject";
+import Tache from "./Tache";
 
 
 
@@ -26,6 +27,7 @@ function App() {
                                 <>
                                     <Route path="/projects" element={<Project />} />
                                     <Route path="/projects/:projectId" element={< TaskOfProject/>} />
+                                    <Route path="/taches" element={<Tache />} />
                                 </>
                             )
                             :

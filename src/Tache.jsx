@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, {useContext, useEffect, useReducer, useState} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "./config";
@@ -6,15 +6,30 @@ import TaskList from "./TaskList";
 import { MDBBtn, MDBInput } from "mdb-react-ui-kit";
 import Modal from "react-modal";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {MyContext} from "./Context";
+import TaskListWithoutDeleteButton from "./TaskListWithoutDeleteButton";
 
 
-function Tache() {
+function TaskOfProject() {
+    const user = useContext(MyContext);
 
     const [tasks, setTasks] = useState([]);
 
 
 
 
+
+    useEffect(() => {
+        axios
+            .get(`${API_URL}/tachesuser?userId=${user._id}`, { withCredentials: true })
+            .then((response) => {
+                console.log(response.data)
+                setTasks(response.data);
+            })
+            .catch((error) => {
+                console.error("Erreur lors de la récupération des utilisateurs :", error);
+            });
+    }, []);
 
 
 
@@ -56,7 +71,7 @@ function Tache() {
             return; // La tâche a été déplacée dans la même colonne, pas besoin de mise à jour
         }
 
-        const validTransitions = ["done-tovalidate", "tovalidate-done"];
+        const validTransitions = ["todo-doing", "doing-todo","doing-tovalidate","tovalidate-doing","todo-tovalidate","tovalidate-todo"];
 
         if (validTransitions.includes(`${sourceColumn}-${destinationColumn}`)) {
             // Obtenez l'ID de la tâche déplacée
@@ -72,46 +87,51 @@ function Tache() {
 
 
     return (
-        <DragDropContext onDragEnd={handleDragEnd}>
-            <div>
 
-                <div className="container">
-                    <div className="row">
-                        <div className="col-2 border">
-                            <p>To Do</p>
-                            <Droppable droppableId="todo">
-                                {(provided) => (
-                                    <ul
-                                        ref={provided.innerRef}
-                                        {...provided.droppableProps}
-                                    >
-                                        {tasks
-                                            .filter((task) => task && task.etat === "todo")
-                                            .map((task, index) => (
-                                                <Draggable
-                                                    key={task._id}
-                                                    draggableId={task._id}
-                                                    index={index}
-                                                >
-                                                    {(provided) => (
-                                                        <li
-                                                            ref={provided.innerRef}
-                                                            {...provided.draggableProps}
-                                                            {...provided.dragHandleProps}
-                                                        >
-                                                            <TaskList
-                                                                titre={task.titre}
-                                                                id={task._id}
-                                                                evolution={task.evolution}
-                                                            />
-                                                        </li>
-                                                    )}
-                                                </Draggable>
-                                            ))}
-                                        {provided.placeholder}
-                                    </ul>
-                                )}
-                            </Droppable>
+        <DragDropContext onDragEnd={handleDragEnd}>
+        <div>
+            <h2>Tâches du user {user._id}</h2>
+
+            <div className="container">
+                <div className="row">
+                    <div className="col-2 border">
+                        <p>To Do</p>
+                        <Droppable droppableId="todo">
+                            {(provided) => (
+                                <ul
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                >
+                                    {tasks
+                                        .filter((task) => task && task.etat === "todo")
+                                        .map((task, index) => (
+                                            <Draggable
+                                                key={task._id}
+                                                draggableId={task._id}
+                                                index={index}
+                                            >
+                                                {(provided) => (
+                                                    <li
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                    >
+                                                        <TaskListWithoutDeleteButton
+                                                            titre={task.titre}
+                                                            id={task._id}
+                                                            evolution={task.evolution}
+                                                        />
+                                                    </li>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                    {provided.placeholder}
+                                </ul>
+                            )}
+                        </Droppable>
+                    </div>
+
+
 
                         <div className="col-2 mx-5 border">
                             <p>Doing</p>
@@ -135,7 +155,7 @@ function Tache() {
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
                                                         >
-                                                            <TaskList
+                                                            <TaskListWithoutDeleteButton
                                                                 titre={task.titre}
                                                                 id={task._id}
                                                                 evolution={task.evolution}
@@ -148,9 +168,8 @@ function Tache() {
                                     </ul>
                                 )}
                             </Droppable>
-
-
                         </div>
+
                         <div className="col-2 mx-5 border">
                             <p>To Validate</p>
                             <Droppable droppableId="tovalidate">
@@ -173,7 +192,7 @@ function Tache() {
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
                                                         >
-                                                            <TaskList
+                                                            <TaskListWithoutDeleteButton
                                                                 titre={task.titre}
                                                                 id={task._id}
                                                                 evolution={task.evolution}
@@ -188,6 +207,7 @@ function Tache() {
                             </Droppable>
 
                         </div>
+
                         <div className="col-2 mx-5 border">
                             <p>Done</p>
                             <Droppable droppableId="done">
@@ -210,7 +230,7 @@ function Tache() {
                                                             {...provided.draggableProps}
                                                             {...provided.dragHandleProps}
                                                         >
-                                                            <TaskList
+                                                            <TaskListWithoutDeleteButton
                                                                 titre={task.titre}
                                                                 id={task._id}
                                                                 evolution={task.evolution}
@@ -228,10 +248,10 @@ function Tache() {
                     </div>
                 </div>
             </div>
-            </div>
-        </DragDropContext>
-    )
 
+
+    </DragDropContext>
+);
 }
 
-export default Tache;
+export default TaskOfProject;

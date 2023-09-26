@@ -27,7 +27,7 @@ function App() {
                                 <>
                                     <Route path="/projects" element={<Project />} />
                                     <Route path="/projects/:projectId" element={< TaskOfProject/>} />
-                                    <Route path="/taches" element={<Tache />} />
+                                    <Route path="/tachesuser" element={<Tache />} />
                                 </>
                             )
                             :

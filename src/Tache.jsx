@@ -1,21 +1,15 @@
-import React, {useContext, useEffect, useReducer, useState} from "react";
-import { useParams } from "react-router-dom";
+import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import { API_URL } from "./config";
-import TaskList from "./TaskList";
-import { MDBBtn, MDBInput } from "mdb-react-ui-kit";
-import Modal from "react-modal";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {MyContext} from "./Context";
 import TaskListWithoutDeleteButton from "./TaskListWithoutDeleteButton";
 
 
 function TaskOfProject() {
+
     const user = useContext(MyContext);
-
     const [tasks, setTasks] = useState([]);
-
-
 
 
 
@@ -29,10 +23,7 @@ function TaskOfProject() {
             .catch((error) => {
                 console.error("Erreur lors de la récupération des utilisateurs :", error);
             });
-    }, []);
-
-
-
+    }, [user]);
 
 
 
@@ -133,7 +124,7 @@ function TaskOfProject() {
 
 
 
-                        <div className="col-2 mx-5 border">
+                    <div className="col-2 mx-5 border">
                             <p>Doing</p>
                             <Droppable droppableId="doing">
                                 {(provided) => (
@@ -168,9 +159,9 @@ function TaskOfProject() {
                                     </ul>
                                 )}
                             </Droppable>
-                        </div>
+                    </div>
 
-                        <div className="col-2 mx-5 border">
+                    <div className="col-2 mx-5 border">
                             <p>To Validate</p>
                             <Droppable droppableId="tovalidate">
                                 {(provided) => (
@@ -205,10 +196,9 @@ function TaskOfProject() {
                                     </ul>
                                 )}
                             </Droppable>
+                    </div>
 
-                        </div>
-
-                        <div className="col-2 mx-5 border">
+                    <div className="col-2 mx-5 border">
                             <p>Done</p>
                             <Droppable droppableId="done">
                                 {(provided) => (
@@ -244,10 +234,10 @@ function TaskOfProject() {
                                 )}
                             </Droppable>
 
-                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
 
     </DragDropContext>

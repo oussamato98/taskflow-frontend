@@ -15,6 +15,14 @@ function TaskList(props){
                 >
                     <i className="far fa-trash-can"></i>
                 </button>
+                <button
+                    onClick={()=>{
+                        window.location.href = '/detailtache/'+props.id
+                    }
+                    }
+                >
+                    <i className="fas fa-angles-down"></i>
+                </button>
             </div>
 
         </div>

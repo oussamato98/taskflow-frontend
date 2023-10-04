@@ -58,16 +58,20 @@ function Commentaire(props){
 
     const [isLiked, setIsLiked] = useState(false);
     function upLike(id,nbrLike){
+        console.log("upLike");
+        setIsLiked(!isLiked);
+
         const incrementedLike = nbrLike+1 ;
 
         const like={
             id:id,
             nombreLike:incrementedLike
-
         }
+
         axios.patch(`${API_URL}/commentaires`,like, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
+                console.log("data sended");
+                //setIsLiked(!isLiked);
             })
             .catch((error) => {
                 console.error("Erreur lors de la récupération des commentaires :", error);
@@ -75,19 +79,23 @@ function Commentaire(props){
     }
 
     function downLike(id,nbrLike){
-        const decrementedLike = nbrLike+1 ;
+        console.log("downLike");
+        setIsLiked(!isLiked);
+        const decrementedLike = nbrLike-1 ;
         const like={
             id:id,
             nombreLike:decrementedLike
         }
         axios.patch(`${API_URL}/commentaires`,like, { withCredentials: true })
             .then((response) => {
-                console.log(response.data);
+                console.log("data sended");
+               // setIsLiked(!isLiked);
 
             })
             .catch((error) => {
                 console.error("Erreur lors de la récupération des commentaires :", error);
             });
+
     }
 
 
@@ -141,8 +149,10 @@ function Commentaire(props){
                                                         } else {
                                                             downLike(comment._id,comment.like);
                                                         }
+                                                        //event.preventDefault();
                                                         //setIsLiked(!isLiked);
                                                     }}
+
                                                     className="btn btn-link btn-sm" style={{ marginTop: '-0.16rem' }}>
                                                     <i className="far fa-thumbs-up mx-2 fa-lg text-black"></i>
                                                 </button>

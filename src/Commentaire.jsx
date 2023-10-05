@@ -21,8 +21,6 @@ function Commentaire(props){
                 // Assurez-vous que data est un tableau avant de le définir comme state
                 setComments(data);
 
-
-
             })
             .catch((error) => {
                 console.error("Erreur lors de la récupération des projets :", error);
@@ -57,48 +55,46 @@ function Commentaire(props){
     }
 
     const [isLiked, setIsLiked] = useState(false);
-    function upLike(id,nbrLike){
-        console.log("upLike");
-        setIsLiked(!isLiked);
 
-        const incrementedLike = nbrLike+1 ;
 
-        const like={
-            id:id,
-            nombreLike:incrementedLike
-        }
 
-        axios.patch(`${API_URL}/commentaires`,like, { withCredentials: true })
+    function upLike(commentId) {
+        console.log(isLiked)
+        axios.patch(`${API_URL}/commentaires/${commentId}/like`)
             .then((response) => {
-                console.log("data sended");
-                //setIsLiked(!isLiked);
+                // Mettre à jour l'état des commentaires avec le nombre de likes actualisé
+                const updatedComments = comments.map((comment) => {
+                    if (comment._id === commentId) {
+                        return { ...comment, like: response.data.like };
+                    }
+                    return comment;
+                });
+                setComments(updatedComments);
             })
             .catch((error) => {
-                console.error("Erreur lors de la récupération des commentaires :", error);
+                console.error("Erreur lors de l'ajout du like :", error);
             });
     }
 
-    function downLike(id,nbrLike){
-        console.log("downLike");
-        setIsLiked(!isLiked);
-        const decrementedLike = nbrLike-1 ;
-        const like={
-            id:id,
-            nombreLike:decrementedLike
-        }
-        axios.patch(`${API_URL}/commentaires`,like, { withCredentials: true })
+    function downLike(commentId) {
+        console.log(isLiked)
+
+        axios.patch(`${API_URL}/commentaires/${commentId}/dislike`)
             .then((response) => {
-                console.log("data sended");
-               // setIsLiked(!isLiked);
+                // Mettre à jour l'état des commentaires avec le nombre de likes actualisé
+                const updatedComments = comments.map((comment) => {
+                    if (comment._id === commentId) {
+                        return { ...comment, like: response.data.like };
+                    }
+                    return comment;
+                });
+                setComments(updatedComments);
 
             })
             .catch((error) => {
-                console.error("Erreur lors de la récupération des commentaires :", error);
+                console.error("Erreur lors de la suppression du like :", error);
             });
-
     }
-
-
 
 
     return(
@@ -145,18 +141,17 @@ function Commentaire(props){
                                                 <button
                                                     onClick={() => {
                                                         if (!isLiked) {
-                                                            upLike(comment._id,comment.like);
+                                                            upLike(comment._id);
                                                         } else {
-                                                            downLike(comment._id,comment.like);
+                                                            downLike(comment._id);
                                                         }
-                                                        //event.preventDefault();
-                                                        //setIsLiked(!isLiked);
+                                                        setIsLiked(!isLiked);
+
                                                     }}
 
                                                     className="btn btn-link btn-sm" style={{ marginTop: '-0.16rem' }}>
                                                     <i className="far fa-thumbs-up mx-2 fa-lg text-black"></i>
                                                 </button>
-
                                                 <p className="small text-muted mb-0">{comment.like}</p>
                                             </div>
                                         </div>
@@ -167,8 +162,6 @@ function Commentaire(props){
                         </div>
                     </div>
                 </div>
-
-
 
         </>
     )

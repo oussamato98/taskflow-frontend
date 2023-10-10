@@ -62,20 +62,55 @@ function TaskOfProject() {
             return; // La tâche a été déplacée dans la même colonne, pas besoin de mise à jour
         }
 
-        const validTransitions = ["todo-doing", "doing-todo","doing-tovalidate","tovalidate-doing","todo-tovalidate","tovalidate-todo"];
+        const validTransitions = ["todo-doing", "doing-todo", "doing-tovalidate", "tovalidate-doing", "todo-tovalidate", "tovalidate-todo"];
 
         if (validTransitions.includes(`${sourceColumn}-${destinationColumn}`)) {
             // Obtenez l'ID de la tâche déplacée
             const taskId = result.draggableId;
-
             // Mise à jour de l'emplacement sur le serveur
             updateTaskStatusOnServer(taskId, destinationColumn.toLowerCase());
+            if (sourceColumn === "doing" && destinationColumn === "tovalidate") {
+                // Exécutez votre fonction spécifique pour la transition
+                notificateChefProjet(taskId);
+            }
+
         }
 
-    };
+    }
+
+    function notificateChefProjet(taskId) {
+
+        axios.get(`${API_URL}/taches/${taskId}`, {withCredentials: true})
+            .then((res) => {
+                // console.log(res.data[0].projet)
+                const projectId = res.data[0].projet;
+                axios.get(`${API_URL}/chefprojet/${projectId}`, {withCredentials: true})
+                    .then((res) => {
+                        console.log(res.data)
+                        const chefProjet=res.data;
+                        const users = {
+                            emetteur: user,
+                            destinataire: chefProjet
+                        }
+                            axios
+                                .post(`${API_URL}/notificationtovalidate`, users,{ withCredentials: true })
+                                .then((res) => {
+                                    console.log(res);
+                                })
+                                .catch((err)=>{console.log(err)})
+
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
 
 
+            })
 
+    }
 
     return (
 
@@ -243,5 +278,6 @@ function TaskOfProject() {
     </DragDropContext>
 );
 }
+
 
 export default TaskOfProject;

@@ -4,7 +4,7 @@ import {MyContext} from "./Context";
 import axios from "axios";
 import {API_URL} from "./config";
 import Notification from "./Notification";
-import {MDBIcon} from "mdb-react-ui-kit";
+import {MDBBadge, MDBIcon} from "mdb-react-ui-kit";
 
 
 function Navbar(){
@@ -49,7 +49,12 @@ function Navbar(){
                                         </li>
                                         <li className="nav-item right-notification">
                                             <a className="nav-link " href="#">
-                                                <Notification />
+                                                <a className='mx-3' href='#!'>
+                                                    <MDBIcon fas icon='envelope' size='lg' />
+                                                    <MDBBadge color='danger' notification pill>
+                                                        1
+                                                    </MDBBadge>
+                                                </a>
                                             </a>
                                         </li>
                                     </>

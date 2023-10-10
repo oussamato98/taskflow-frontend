@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, {useContext, useEffect, useReducer, useState} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "./config";
@@ -6,10 +6,13 @@ import TaskList from "./TaskList";
 import { MDBBtn, MDBInput } from "mdb-react-ui-kit";
 import Modal from "react-modal";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {MyContext} from "./Context";
 
 
 function TaskOfProject() {
     const { projectId } = useParams();
+    const user = useContext(MyContext);
+
 
     const [tasks, setTasks] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -198,6 +201,7 @@ function TaskOfProject() {
                 // Attribuez l'objet utilisateur à state.executeur
 
                 state.executeur = user;
+                const destinataire = user ;
 
                 // Attribuez également le projet
                 state.projet = projectId;
@@ -208,6 +212,7 @@ function TaskOfProject() {
                     .then((res) => {
                         if (res.status === 201) {
                             const nouvelleTache = res.data.nouveauTache;
+                            notificateUserForCreatingTask(destinataire);
 
                             axios
                                 .get(`${API_URL}/projects/${projectId}`, {
@@ -309,9 +314,73 @@ function TaskOfProject() {
 
             // Mise à jour de l'emplacement sur le serveur
             updateTaskStatusOnServer(taskId, destinationColumn.toLowerCase());
+
+            if (destinationColumn === "done" && sourceColumn === "tovalidate") {
+                notificateUserForValidatingTask(taskId);
+            }
+
         }
 
     };
+
+    function notificateUserForCreatingTask(destinataire){
+        let users = {
+            emetteur : user,
+            destinataire : destinataire
+        }
+        axios
+            .post(`${API_URL}/notifications`, users,{ withCredentials: true })
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err)=>{console.log(err)})
+
+    }
+
+    function notificateUserForValidatingTask(taskId){
+        //console.log("user notified for validated task "+taskId)
+        axios.get(`${API_URL}/taches/${taskId}`, {withCredentials: true})
+            .then((res) => {
+                const projectId = res.data[0].projet;
+                axios.get(`${API_URL}/chefprojet/${projectId}`, {withCredentials: true})
+                    .then((res) => {
+                        const chefProjet=res.data;
+                        const users = {
+                            emetteur: user,
+                            destinataire: chefProjet
+                        }
+                        axios
+                            .post(`${API_URL}/notificationvalidate`, users,{ withCredentials: true })
+                            .then((res) => {
+                                console.log(res);
+                            })
+                            .catch((err)=>{console.log(err)})
+
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+
+
+            })
+
+        // let users = {
+        //     emetteur : user,
+        //     destinataire : destinataire
+        // }
+        // axios
+        //     .post(`${API_URL}/notifications`, users,{ withCredentials: true })
+        //     .then((res) => {
+        //         console.log(res);
+        //     })
+        //     .catch((err)=>{console.log(err)})
+
+    }
+
+
 
 
 

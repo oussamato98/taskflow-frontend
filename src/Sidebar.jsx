@@ -14,7 +14,7 @@ function Sidebar(){
                         <a href="/tachesuser" className="list-group-item list-group-item-action ripple">
                             <i className="fas fa-bars fa-fw me-3"></i><span>Taches</span>
                         </a>
-                        <a href="#" className="list-group-item list-group-item-action ripple">
+                        <a href="/notifications" className="list-group-item list-group-item-action ripple">
                             <i className="fas fa-envelope fa-fw me-3"></i><span>Notifications</span>
                         </a>
                     </div>

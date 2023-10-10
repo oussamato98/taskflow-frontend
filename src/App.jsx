@@ -9,6 +9,7 @@ import  {MyContext} from "./Context";
 import TaskOfProject from "./TaskOfProject";
 import Tache from "./Tache";
 import DetailTache from "./DetailTache";
+import Notification from "./Notification";
 
 
 
@@ -30,6 +31,9 @@ function App() {
                                     <Route path="/projects/:projectId" element={< TaskOfProject/>} />
                                     <Route path="/tachesuser" element={<Tache />} />
                                     <Route path="/detailtache/:tacheId" element={<DetailTache />}/>
+                                    <Route path="/notifications" element={<Notification />}/>
+
+
                                 </>
                             )
                             :

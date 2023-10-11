@@ -34,11 +34,11 @@ function ProjectBar(props){
                     </button>
 
                 </td>
-                <td>
-                    <button type="button" className="btn btn-link btn-lg btn-rounded">
-                        <i className="fas fa-pen"></i>
-                    </button>
-                </td>
+                {/*<td>*/}
+                {/*    <button type="button" className="btn btn-link btn-lg btn-rounded">*/}
+                {/*        /!*<i className="fas fa-pen"></i>*!/*/}
+                {/*    </button>*/}
+                {/*</td>*/}
             </tr>
             <tr>
 

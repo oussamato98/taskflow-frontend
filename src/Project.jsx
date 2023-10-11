@@ -118,7 +118,7 @@ function Project() {
 
     return (
         <>
-            <div className="row">
+            <div className="row" style={{marginTop: 100}} >
                 <div className="col-lg-3 col-md-4 col-6">
                     <Sidebar />
                 </div>

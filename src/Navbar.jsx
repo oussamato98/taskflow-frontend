@@ -1,14 +1,13 @@
-import React, {useContext} from "react";
-import {Link} from "react-router-dom";
+import React, {useContext, useState} from "react";
 import {MyContext} from "./Context";
 import axios from "axios";
 import {API_URL} from "./config";
-import Notification from "./Notification";
 import {MDBBadge, MDBIcon} from "mdb-react-ui-kit";
 
 
 function Navbar(){
     const ctx = useContext(MyContext);
+    const [numberOfNotifiation , setnumberOfNotifiation]=useState();
     const logout = ()=>{
         axios.get(`${API_URL}/logout`,{withCredentials:true})
             .then(res=>{
@@ -17,10 +16,28 @@ function Navbar(){
                 }
             })
     }
+
+   function numberofnotif(){
+        // Récupérez les notifications depuis votre backend
+        axios.get(`${API_URL}/notifications`,{ withCredentials: true }) // Mettez l'URL correcte pour récupérer les notifications
+            .then((response) => {
+                const notificationOfThisUser = response.data.filter((notification) => {
+                    return notification.destinataire._id === ctx._id;
+                });
+                const numberOfNotifications = notificationOfThisUser.length;
+                setnumberOfNotifiation(numberOfNotifications);
+                console.log(notificationOfThisUser)
+            })
+            .catch((error) => {
+                console.error("Erreur lors de la récupération des notifications :", error);
+            });
+   }
+   numberofnotif();
+
     return (
 
-        <div>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        <div >
+            <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
                 <div className="container-fluid">
                     <a className="navbar-brand" href="/">
                         <img
@@ -41,18 +58,18 @@ function Navbar(){
                                         </li>
                                         <li className="nav-item right-logout">
                                             <a className="nav-link "
-                                               href="/logout"
+                                               href="/"
                                                onClick={logout}
                                             >
                                                 <MDBIcon fas icon="sign-out-alt" />
                                             </a>
                                         </li>
                                         <li className="nav-item right-notification">
-                                            <a className="nav-link " href="#">
-                                                <a className='mx-3' href='#!'>
+                                            <a className="nav-link " href="/notifications">
+                                                <a className='mx-3' href='/notifications'>
                                                     <MDBIcon fas icon='envelope' size='lg' />
                                                     <MDBBadge color='danger' notification pill>
-                                                        1
+                                                        {numberOfNotifiation}
                                                     </MDBBadge>
                                                 </a>
                                             </a>

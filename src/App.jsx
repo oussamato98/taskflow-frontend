@@ -32,8 +32,6 @@ function App() {
                                     <Route path="/tachesuser" element={<Tache />} />
                                     <Route path="/detailtache/:tacheId" element={<DetailTache />}/>
                                     <Route path="/notifications" element={<Notification />}/>
-
-
                                 </>
                             )
                             :

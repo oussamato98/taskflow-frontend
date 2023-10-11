@@ -5,7 +5,7 @@ function Sidebar(){
 
 
 
-                    <div style={{marginTop: 30}}
+                    <div
                         className="list-group list-group-flush">
 
                         <a href="/projects" className="list-group-item list-group-item-action ripple">

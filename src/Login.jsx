@@ -16,6 +16,7 @@ import {
     MDBCheckbox
 }
 from 'mdb-react-ui-kit';
+import Alert from "./Alert";
 
 
 
@@ -99,20 +100,32 @@ function Login() {
         dispatch({type: 'SET_PASSWORD', payload: event.target.value});
     };
 
-
+    const [loginError, setLoginError] = useState(false);
 // withCredential c est  pour indiquer à Axios d'inclure les cookies d'authentification dans la requête.
     const handleSubmitLogin = (event)=>{
         event.preventDefault();
          axios.post(`${API_URL}/login`, state , {withCredentials:true})
              .then(res=>{
+                 // console.log(res.data)
                  if(res.data==="Success"){
                      window.location.href = '/'
+                 }
+             })
+             .catch((error) => {
+                 if (error.response && error.response.status === 401) {
+                     // Le serveur a répondu avec une erreur 401 (Unauthorized)
+                     setLoginError(true); // Définissez l'état loginError sur true pour afficher le message d'erreur
+                 } else {
+                     console.error('Erreur lors de la connexion :', error);
                  }
              });
     }
 
 
     return (
+        <>
+            {loginError && <Alert type="danger" message="Problème de connexion. Veuillez réessayer." />}
+
             <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
 
                 <MDBTabs pills justify className='mb-3 d-flex flex-row justify-content-between'>
@@ -250,7 +263,9 @@ function Login() {
                 </MDBTabsContent>
 
             </MDBContainer>
+        </>
         );
+
     }
 
 
